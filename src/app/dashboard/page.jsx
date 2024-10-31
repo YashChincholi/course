@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, UserButton } from "@clerk/nextjs";
 
 function Dashboard() {
   const { isLoaded, userId } = useAuth();
@@ -18,7 +18,7 @@ function Dashboard() {
     return <div>Loading...</div>;
   }
 
-  return <div>Dashboard</div>;
+  return <UserButton />;
 }
 
 export default Dashboard;
