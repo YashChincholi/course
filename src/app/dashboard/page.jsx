@@ -1,5 +1,6 @@
 "use client";
 
+import AddCourse from "./_components/AddCourse"
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, UserButton } from "@clerk/nextjs";
@@ -18,7 +19,11 @@ function Dashboard() {
     return <div>Loading...</div>;
   }
 
-  return <UserButton />;
+  return (
+    <div>
+      <AddCourse />
+    </div>
+  );
 }
 
 export default Dashboard;
