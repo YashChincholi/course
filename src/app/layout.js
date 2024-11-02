@@ -2,9 +2,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
 
-const piazzolla = localFont({
-  src: "./fonts/Piazzolla-VariableFont_wght.woff",
-  variable: "--font-piazzolla",
+const montserrat = localFont({
+  src: "./fonts/Montserrat-VariableFont_wght.woff2",
+  variable: "--font-montserrat",
   weight: "100 900",
 });
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <GoogleOneTap />
-        <body className={`${piazzolla.variable} antialiased`}>{children}</body>
+        <body className={`${montserrat.variable} antialiased`}>{children}</body>
       </html>
     </ClerkProvider>
   );
