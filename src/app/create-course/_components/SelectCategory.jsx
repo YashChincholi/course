@@ -16,9 +16,10 @@ function SelectCategory() {
       <h2 className="mb-5 flex items-center justify-center font-semibold">
         Select the course category
       </h2>
-      <div className="grid grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 ">
         {CategoryList.map((item, idx) => (
           <div
+            key={idx}
             className={`flex flex-col p-5 border shadow-md items-center hover:border-primary hover:bg-blue-100 rounded-xl cursor-pointer ${
               userCourseInput?.category == item.name &&
               "border-primary bg-blue-50"
@@ -27,7 +28,7 @@ function SelectCategory() {
               handelCategoryChange(item.name);
             }}
           >
-            <Image src={item.icon} width={50} height={50} />
+            <Image alt={item.name} src={item.icon} width={50} height={50} />
             <h2 className="font-medium">{item.name}</h2>
           </div>
         ))}

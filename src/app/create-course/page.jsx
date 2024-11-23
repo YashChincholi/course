@@ -4,12 +4,14 @@ import { useContext, useEffect, useState } from "react";
 import SelectCategory from "./_components/SelectCategory.jsx";
 import TopicDescription from "./_components/TopicDescription.jsx";
 import SelectOption from "./_components/SelectOption.jsx";
+import LoadingDialog from "./_components/LoadingDialog.jsx";
 import {
   HiClipboardDocumentCheck,
   HiLightBulb,
   HiOutlineSquare3Stack3D,
 } from "react-icons/hi2";
 import { UserInputContext } from "../_context/UserInputContext.jsx";
+import { GenerateCourseLayout_AI } from "../../../configs/AiModel.jsx";
 
 function CreateCourse() {
   const stepper = [
@@ -33,6 +35,8 @@ function CreateCourse() {
   const [activeIndex, setActiveIndex] = useState(0);
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     console.log(userCourseInput);
   }, [userCourseInput]);
@@ -44,7 +48,7 @@ function CreateCourse() {
     }
     if (
       activeIndex == 0 &&
-      (userCourseInput?.category.length == 0 ||
+      (userCourseInput?.category?.length == 0 ||
         userCourseInput?.category == undefined)
     ) {
       return true;
@@ -55,21 +59,45 @@ function CreateCourse() {
         userCourseInput?.topic == undefined)
     ) {
       return true;
-    }
-    if (
-      (activeIndex == 2 &&
-        (userCourseInput?.level?.length == 0 ||
-          userCourseInput?.level == undefined)) ||
-      userCourseInput?.duration?.length == 0 ||
-      userCourseInput?.duration == undefined ||
-      userCourseInput?.displayVideo?.length == 0 ||
-      userCourseInput?.displayVideo == undefined ||
-      userCourseInput?.noOfChapter?.length == 0 ||
-      userCourseInput?.noOfChapter == undefined
+    } else if (
+      activeIndex == 2 &&
+      (userCourseInput?.level == undefined ||
+        userCourseInput?.duration == undefined ||
+        userCourseInput?.displayVideo == undefined ||
+        userCourseInput?.noOfChapter == undefined)
     ) {
       return true;
     }
     return false;
+  };
+  const GenerateCourseLayout = async () => {
+    setLoading(true);
+    const BASIC_PROMPT =
+      "Generate a course tutorial in JSON format with the following details Each chapter should include:- Name: Chapter name, Duration: Chapter duration,About: Chapter description. The AI should generate appropriate values for the course name, description, chapter names, durations, and descriptions.";
+
+    const USER_Input_PROMPT =
+      "Category: " +
+      userCourseInput?.category +
+      ",Topic: " +
+      userCourseInput?.topic +
+      ",Level: " +
+      userCourseInput?.level +
+      ",Duration: " +
+      userCourseInput?.duration +
+      ",Number of Chapters: " +
+      userCourseInput?.noOfChapter +
+      "";
+
+    const FINAL_PROMPT = BASIC_PROMPT + USER_Input_PROMPT;
+    try {
+      const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
+      console.log(result.response?.text());
+      console.log(JSON.parse(result.response?.text()));
+    } catch (error) {
+      console.error("Error generating course layout:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -139,7 +167,7 @@ function CreateCourse() {
           {activeIndex == 2 && (
             <Button
               onClick={() => {
-                setActiveIndex(activeIndex + 1);
+                GenerateCourseLayout();
               }}
               disabled={checkStatus()}
             >
@@ -148,6 +176,7 @@ function CreateCourse() {
           )}
         </div>
       </div>
+      <LoadingDialog loading={loading} />
     </div>
   );
 }
