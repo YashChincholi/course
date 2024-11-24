@@ -12,8 +12,15 @@ import {
 } from "react-icons/hi2";
 import { UserInputContext } from "../_context/UserInputContext.jsx";
 import { GenerateCourseLayout_AI } from "../../../configs/AiModel.jsx";
+import { db } from "../../../configs/db.jsx";
+import { CourseList } from "../../../configs/schema.jsx";
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from "@clerk/nextjs";
 
 function CreateCourse() {
+  const user = useUser();
+  console.log(user);
+
   const stepper = [
     {
       id: 1,
@@ -91,13 +98,30 @@ function CreateCourse() {
     const FINAL_PROMPT = BASIC_PROMPT + USER_Input_PROMPT;
     try {
       const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
-      console.log(result.response?.text());
-      console.log(JSON.parse(result.response?.text()));
+      const parsedResult = JSON.parse(result.response?.text());
+      console.log(parsedResult);
+      saveDatabase(parsedResult);
     } catch (error) {
       console.error("Error generating course layout:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const saveDatabase = async (courseOutput) => {
+    var id = uuidv4();
+    setLoading(true);
+    const result = await db.insert(CourseList).values({
+      courseId: id,
+      name: userCourseInput?.topic,
+      level: userCourseInput?.level,
+      category: userCourseInput?.category,
+      courseOutput: courseOutput,
+      createdBy: user?.user.primaryEmailAddress?.emailAddress,
+      userProfileImage: user?.user.imageUrl,
+      userName: user?.user.fullName,
+    });
+    setLoading(false);
   };
 
   return (
