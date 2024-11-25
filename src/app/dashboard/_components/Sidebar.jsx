@@ -41,7 +41,7 @@ function Sidebar() {
   ];
   return (
     <div className="fixed h-full md:w-64 p-5 shadow-md">
-      <Image src={"/logo2.svg"} width={160} height={100} alt="logo" />
+      <Image src={"/logo2.svg"} width={160} height={100} alt={"logo"} />
       <hr className="my-5" />
       <ul>
         {Menu.map((item, index) => (

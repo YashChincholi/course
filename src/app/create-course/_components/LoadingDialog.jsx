@@ -25,6 +25,7 @@ function LoadingDialog({ loading }) {
                 alt={"loading"}
                 width={100}
                 height={100}
+
               />
               <h2 className="text-md font-semibold text-black">
                 Please Wait.....AI Working on course

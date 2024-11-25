@@ -3,7 +3,7 @@
 import AddCourse from "./_components/AddCourse";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import Loader from "./_components/Loader";
 
 function Dashboard() {
@@ -20,6 +20,14 @@ function Dashboard() {
     return (
       <div className="flex items-center justify-center">
         <Loader loading={!isLoaded} />
+      </div>
+    );
+  }
+
+  if (!userId) {
+    return (
+      <div className="flex items-center justify-center">
+        <Loader loading={true} />
       </div>
     );
   }
