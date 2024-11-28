@@ -8,11 +8,14 @@ import { eq } from "drizzle-orm";
 import CourseBasicInfo from "./_components/CourseBasicInfo";
 import CourseDetail from "./_components/CourseDetail";
 import ChapterList from "./_components/ChapterList";
+import { useLoading } from "@/app/_context/LoadingContext";
+import Loader from "@/app/_components/Loader";
 
 function CourseLayout({ params }) {
   const { user, isLoaded } = useUser();
   const [courseId, setCourseId] = useState(null);
   const [course, setCourse] = useState([]);
+  const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
     async function fetchParams() {
@@ -32,6 +35,7 @@ function CourseLayout({ params }) {
   }, [courseId, user]);
 
   const GetCourse = async () => {
+    setIsLoading(true);
     const result = await db
       .select()
       .from(CourseList)
@@ -39,22 +43,24 @@ function CourseLayout({ params }) {
 
     setCourse(result[0]);
     console.log("Fetched Course:", result[0]);
+    setIsLoading(false);
   };
 
   console.log("Course:", course);
 
   return (
-    <div className="mt-3 px-7 md:px-20 lg:px-44">
+    <div className="px-7 md:px-20 lg:px-44">
       <h2 className="text-2xl font-bold text-center">Course Layout</h2>
 
       {/* Basic info */}
-      <CourseBasicInfo course={course} />
+      <CourseBasicInfo course={course} refreshData={() => GetCourse()} />
 
       {/* Course Details */}
       <CourseDetail course={course} />
 
       {/* List of lessons */}
-      <ChapterList course={course} />
+      <ChapterList course={course} refreshData={() => GetCourse()} />
+      <Loader />
     </div>
   );
 }

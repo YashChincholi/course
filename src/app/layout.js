@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider, GoogleOneTap } from "@clerk/nextjs";
+import { LoadingProvider } from "./_context/LoadingContext";
 
 const montserrat = localFont({
   src: "./fonts/Montserrat-VariableFont_wght.woff2",
@@ -16,11 +17,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <GoogleOneTap />
-        <body className={`${montserrat.variable} antialiased`}>{children}</body>
-      </html>
-    </ClerkProvider>
+    <LoadingProvider>
+      <ClerkProvider>
+        <html lang="en">
+          <GoogleOneTap />
+          <body className={`${montserrat.variable} antialiased`}>
+            {children}
+          </body>
+        </html>
+      </ClerkProvider>
+    </LoadingProvider>
   );
 }
