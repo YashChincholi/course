@@ -44,7 +44,7 @@ function CourseBasicInfo({ course, refreshData }) {
   };
 
   return (
-    <div className="border shadow-sm mt-5 p-10 rounded-xl">
+    <div className="border shadow-sm my-10 p-10 rounded-xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <h2 className="font-bold text-3xl">

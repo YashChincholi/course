@@ -10,12 +10,14 @@ import CourseDetail from "./_components/CourseDetail";
 import ChapterList from "./_components/ChapterList";
 import { useLoading } from "@/app/_context/LoadingContext";
 import Loader from "@/app/_components/Loader";
+import { Button } from "@/components/ui/button";
+import { GenerateChapterContent_AI } from "../../../../configs/AiModel";
 
 function CourseLayout({ params }) {
   const { user, isLoaded } = useUser();
   const [courseId, setCourseId] = useState(null);
   const [course, setCourse] = useState([]);
-  const { isLoading, setIsLoading } = useLoading();
+  const { setIsLoading } = useLoading();
 
   useEffect(() => {
     async function fetchParams() {
@@ -42,11 +44,41 @@ function CourseLayout({ params }) {
       .where(eq(CourseList?.courseId, courseId));
 
     setCourse(result[0]);
-    console.log("Fetched Course:", result[0]);
     setIsLoading(false);
   };
 
   console.log("Course:", course);
+
+  const GenerateChapterContent = () => {
+    setIsLoading(true);
+
+    const chapters = course?.courseOutput?.chapters;
+    chapters.forEach(async (chapter, index) => {
+      console.log(index);
+      const name = chapter.name || chapter.Name;
+      const about = chapter.about || chapter.About;
+      const PROMPT =
+        "Explain the concept in detail on Topic: " +
+        course?.name +
+        ", Chapter: " +
+        name +
+        ", in JSON format with an list of array with following fields as title, explanation on given chapter in detail, Code example(Code Field in <precode> format) if applicable";
+
+      // console.log(PROMPT);
+
+      if (index == 0) {
+        console.log(index);
+        try {
+          const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+          console.log(result?.response?.text());
+          setIsLoading(false);
+        } catch (error) {
+          setIsLoading(false);
+          console.error(error);
+        }
+      }
+    });
+  };
 
   return (
     <div className="px-7 md:px-20 lg:px-44">
@@ -60,6 +92,10 @@ function CourseLayout({ params }) {
 
       {/* List of lessons */}
       <ChapterList course={course} refreshData={() => GetCourse()} />
+
+      <Button onClick={GenerateChapterContent} className="my-10">
+        Generate Chapter Content
+      </Button>
       <Loader />
     </div>
   );
