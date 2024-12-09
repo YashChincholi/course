@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import Loader from "./_components/Loader";
+import UserCourseList from "./_components/UserCourseList";
 
 function Dashboard() {
   const { isLoaded, userId } = useAuth();
@@ -35,6 +36,8 @@ function Dashboard() {
   return (
     <div>
       <AddCourse />
+      {/* Display Course List */}
+      <UserCourseList />
     </div>
   );
 }
