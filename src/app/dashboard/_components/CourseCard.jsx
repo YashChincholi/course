@@ -1,12 +1,32 @@
 import Image from "next/image";
 import React from "react";
 import { HiOutlineBookOpen } from "react-icons/hi2";
+import { HiEllipsisVertical } from "react-icons/hi2";
+import DropdownOption from "./DropdownOption";
+import { db } from "../../../../configs/db";
+import { Chapters, CourseList } from "../../../../configs/schema";
+import { eq } from "drizzle-orm";
 
-function CourseCard({ course }) {
-  console.log("course", course);
-  console.log("course banner", course.banner);
+function CourseCard({ course, refreshData }) {
+  console.log(course);
+  const handelDelete = async () => {
+    const courseResult = await db
+      .delete(CourseList)
+      .where(eq(CourseList?.id, course?.id))
+      .returning({ id: CourseList?.id });
+
+    const chapterResult = await db
+      .delete(Chapters)
+      .where(eq(Chapters?.courseId, course?.courseId))
+      .returning({ id: Chapters?.id });
+
+    if (courseResult && chapterResult) {
+      refreshData(true);
+    }
+  };
+
   return (
-    <div className="shadow-sm rounded-xl hover:scale-105 border transition-all p-2 ">
+    <div className="shadow-sm rounded-xl border p-2 ">
       {course?.banner ? (
         <Image
           src={course?.banner}
@@ -25,7 +45,14 @@ function CourseCard({ course }) {
         />
       )}
       <div className="p-2">
-        <h2 className="font-medium">{course?.courseOutput?.courseName}</h2>
+        <h2 className="font-medium flex items-start justify-between text-lg">
+          {course?.courseOutput?.courseName}
+          <span className="text-xl">
+            <DropdownOption handelDelete={handelDelete}>
+              <HiEllipsisVertical />
+            </DropdownOption>
+          </span>
+        </h2>
         <p className="text-gray-400 my-2">{course?.category}</p>
         <div className="flex items-center justify-between">
           <h2 className="flex gap-2 items-center p-1 bg-purple-50 text-primary text-sm font-medium rounded-sm">

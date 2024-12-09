@@ -36,7 +36,6 @@ function Dashboard() {
   return (
     <div>
       <AddCourse />
-      {/* Display Course List */}
       <UserCourseList />
     </div>
   );
