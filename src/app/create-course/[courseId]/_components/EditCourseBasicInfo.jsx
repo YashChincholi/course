@@ -42,7 +42,6 @@ function EditCourseBasicInfo({ course, refreshData }) {
       .where(eq(CourseList?.id, course?.id))
       .returning({ id: CourseList.id });
 
-    console.log(result);
     refreshData(true);
     setIsLoading(false);
   };

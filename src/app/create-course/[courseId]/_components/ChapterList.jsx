@@ -3,17 +3,14 @@ import { HiClock, HiOutlineCheckCircle } from "react-icons/hi";
 import EditChapterList from "./EditChapterList";
 
 function ChapterList({ course, refreshData }) {
-  console.log("chapters list:", course);
   return (
     <div className="mt-11">
       <h2 className="text-xl font-medium">Chapters</h2>
       <div className="mt-3">
         {course?.courseOutput?.chapters?.map((chapter, idx) => {
-          console.log(chapter);
           const name = chapter?.Name || chapter?.name;
           const duration = chapter?.Duration || chapter?.duration;
           const about = chapter?.About || chapter?.about;
-          console.log(name, duration, about);
           return (
             <div
               className="border shadow-sm rounded-xl p-5 mb-2 flex justify-between items-center"

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { db } from "../../../../configs/db";
-import { CourseList } from "../../../../configs/schema";
+import { Chapters, CourseList } from "../../../../configs/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import CourseBasicInfo from "./_components/CourseBasicInfo";
@@ -12,12 +12,16 @@ import { useLoading } from "@/app/_context/LoadingContext";
 import Loader from "@/app/_components/Loader";
 import { Button } from "@/components/ui/button";
 import { GenerateChapterContent_AI } from "../../../../configs/AiModel";
+import service from "../../../../configs/service";
+import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/navigation";
 
 function CourseLayout({ params }) {
   const { user, isLoaded } = useUser();
   const [courseId, setCourseId] = useState(null);
   const [course, setCourse] = useState([]);
   const { setIsLoading } = useLoading();
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchParams() {
@@ -41,20 +45,16 @@ function CourseLayout({ params }) {
     const result = await db
       .select()
       .from(CourseList)
-      .where(eq(CourseList?.courseId, courseId));
+      .where(eq(CourseList.courseId, courseId));
 
     setCourse(result[0]);
     setIsLoading(false);
   };
-
-  console.log("Course:", course);
-
-  const GenerateChapterContent = () => {
+  const GenerateChapterContent = async () => {
     setIsLoading(true);
 
     const chapters = course?.courseOutput?.chapters;
-    chapters.forEach(async (chapter, index) => {
-      console.log(index);
+    for (const [index, chapter] of chapters.entries()) {
       const name = chapter.name || chapter.Name;
       const about = chapter.about || chapter.About;
       const PROMPT =
@@ -64,20 +64,40 @@ function CourseLayout({ params }) {
         name +
         ", in JSON format with an list of array with following fields as title, explanation on given chapter in detail, Code example(Code Field in <precode> format) if applicable";
 
-      // console.log(PROMPT);
+      // if (index < 3) {
+      try {
+        let videoId = "";
+        const id = uuidv4();
 
-      if (index == 0) {
-        console.log(index);
-        try {
-          const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
-          console.log(result?.response?.text());
-          setIsLoading(false);
-        } catch (error) {
-          setIsLoading(false);
-          console.error(error);
-        }
+        // Generate video URL
+        const resp = await service.getVideos(
+          course?.name + ":" + chapter?.name
+        );
+        videoId = resp[0]?.id?.videoId;
+
+        // Generate chapter content
+        const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
+        const content = JSON.parse(result?.response?.text());
+
+        // Save Chapter content + video URL
+        await db.insert(Chapters).values({
+          courseId: course?.courseId,
+          chapterId: index,
+          content: content,
+          videoId: videoId,
+        });
+
+        console.log(`Chapter ${index + 1} added successfully`);
+      } catch (error) {
+        console.error(`Failed to add chapter ${index + 1}`, error);
       }
-    });
+
+      await db.update(CourseList).set({
+        publish: true,
+      });
+      setIsLoading(false);
+      router.replace("/create-course/" + course?.courseId + "/finish");
+    }
   };
 
   return (

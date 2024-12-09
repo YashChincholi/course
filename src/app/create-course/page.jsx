@@ -45,9 +45,6 @@ function CreateCourse() {
   const { userCourseInput } = useContext(UserInputContext);
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   console.log("User course output", userCourseInput);
-  // }, [userCourseInput]);
 
   const checkStatus = () => {
     if (!userCourseInput) return true;
@@ -86,7 +83,6 @@ function CreateCourse() {
     try {
       const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
       const parsedResult = JSON.parse(result.response?.text());
-      console.log("parsed result", parsedResult);
       saveDatabase(parsedResult);
     } catch (error) {
       console.error("Error generating course layout:", error);
@@ -103,8 +99,6 @@ function CreateCourse() {
     const userProfileImage = user?.imageUrl || "default-image-url";
     const userName = user?.fullName || "Anonymous";
 
-    // Log userCourseInput to verify values
-    console.log("userCourseInput:", userCourseInput);
 
     // Ensure userCourseInput values are valid and not default
     const noOfChapters =
@@ -116,19 +110,7 @@ function CreateCourse() {
     const category = userCourseInput.category || "Default Category";
     const includeVideo = userCourseInput.displayVideo || "Yes";
 
-    // Log values to be inserted
-    console.log("Values to be inserted:", {
-      courseId: id,
-      name: topic,
-      level: level,
-      category: category,
-      noOfChapters: noOfChapters, // Corrected property name
-      includeVideo: includeVideo,
-      courseOutput: courseOutput,
-      createdBy: createdBy,
-      userProfileImage: userProfileImage,
-      userName: userName,
-    });
+   
 
     try {
       const result = await db.insert(CourseList).values({
@@ -136,14 +118,13 @@ function CreateCourse() {
         name: topic,
         level: level,
         category: category,
-        noOfChapters: noOfChapters, // Corrected property name
+        noOfChapters: noOfChapters, 
         includeVideo: includeVideo,
         courseOutput: courseOutput,
         createdBy: createdBy,
         userProfileImage: userProfileImage,
         userName: userName,
       });
-      console.log("Course data saved successfully:", result);
     } catch (error) {
       console.error("Error saving course data:", error);
     } finally {

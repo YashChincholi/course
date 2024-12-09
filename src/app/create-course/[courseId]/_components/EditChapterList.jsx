@@ -20,7 +20,6 @@ import { eq } from "drizzle-orm";
 import { CourseList } from "../../../../../configs/schema";
 
 function EditChapterList({ course, index, refreshData }) {
-  // console.log("edit chapter list", course);
 
   const Chapters = course?.courseOutput?.chapters;
 
@@ -46,14 +45,11 @@ function EditChapterList({ course, index, refreshData }) {
       .where(eq(CourseList?.id, course?.id))
       .returning({ id: CourseList.id });
 
-    console.log("edit chapter list result", result);
     refreshData(true);
     setIsLoading(false);
   };
 
-  // console.log("chpater name", Chapters[index]?.name || Chapters[index]?.Name);
-  // console.log("chpater about", Chapters[index]?.about || Chapters[index]?.About);
-
+  
   return (
     <Dialog>
       <DialogTrigger>

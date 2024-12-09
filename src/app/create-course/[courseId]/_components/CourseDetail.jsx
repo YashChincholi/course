@@ -7,7 +7,6 @@ import {
 } from "react-icons/hi";
 
 function CourseDetail({ course }) {
-  console.log(course);
   return (
     <div className="border shadow-sm p-6 mt-3 rounded-xl">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
