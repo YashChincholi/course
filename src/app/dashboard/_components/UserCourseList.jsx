@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { db } from "../../../../configs/db";
 import { CourseList } from "../../../../configs/schema";
 import { eq } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import CourseCard from "./CourseCard";
+import UserCourseListContext from "@/app/_context/UserCourseListContext";
 
 function UserCourseList() {
   const { user } = useUser();
   const [courseList, setCourseList] = useState([]);
+  const { userCourseList, setUserCourseList } = useContext(
+    UserCourseListContext
+  );
 
   useEffect(() => {
     if (user) {
@@ -25,6 +29,7 @@ function UserCourseList() {
         eq(CourseList?.createdBy, user?.primaryEmailAddress?.emailAddress)
       );
     setCourseList(result);
+    setUserCourseList(result);
   };
 
   return (
