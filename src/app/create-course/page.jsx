@@ -44,6 +44,7 @@ function CreateCourse() {
   const [activeIndex, setActiveIndex] = useState(0);
   const { userCourseInput } = useContext(UserInputContext);
   const [loading, setLoading] = useState(false);
+  const [courseId, setCourseId] = useState(null);
 
   const checkStatus = () => {
     if (!userCourseInput) return true;
@@ -82,16 +83,17 @@ function CreateCourse() {
     try {
       const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
       const parsedResult = JSON.parse(result.response?.text());
-      saveDatabase(parsedResult);
+      await saveDatabase(parsedResult);
     } catch (error) {
       console.error("Error generating course layout:", error);
     } finally {
       setLoading(false);
     }
   };
+
   const saveDatabase = async (courseOutput) => {
     const id = uuidv4();
-    setLoading(true);
+    setCourseId(id);
 
     const createdBy =
       user?.primaryEmailAddress?.emailAddress || "default@example.com";
@@ -109,7 +111,7 @@ function CreateCourse() {
     const includeVideo = userCourseInput.displayVideo || "Yes";
 
     try {
-      const result = await db.insert(CourseList).values({
+      await db.insert(CourseList).values({
         courseId: id,
         name: topic,
         level: level,
@@ -123,11 +125,14 @@ function CreateCourse() {
       });
     } catch (error) {
       console.error("Error saving course data:", error);
-    } finally {
-      setLoading(false);
-      router.replace("/create-course/" + id);
     }
   };
+
+  useEffect(() => {
+    if (courseId) {
+      router.replace("/create-course/" + courseId);
+    }
+  }, [courseId, router]);
 
   return (
     <div>

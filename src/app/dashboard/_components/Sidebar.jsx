@@ -56,7 +56,7 @@ function Sidebar() {
               }`}
             >
               <div className="text-2xl">{item.icon}</div>
-              <h2>{item.name}</h2>
+              <h2 className="font-semibold">{item.name}</h2>
             </div>
           </Link>
         ))}

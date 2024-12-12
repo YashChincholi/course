@@ -12,7 +12,7 @@ function ChapterContent({ chapter, content }) {
   console.log(chapter);
   console.log(content);
   return (
-    <div className="p-10">
+    <div className="p-8">
       <h2 className="font-bold text-2xl">{chapter?.name}</h2>
       <p className="text-gray-500 whitespace-pre-wrap">{chapter?.about}</p>
 

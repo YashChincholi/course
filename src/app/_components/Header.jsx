@@ -6,9 +6,11 @@ import React from "react";
 function Header() {
   return (
     <div className="flex justify-between p-5 shadow-sm">
-      <Image src={"/logo2.svg"} alt="logo" width={180} height={100} />
+      <Link href={"/"}>
+        <Image src={"/logo2.svg"} alt="logo" width={180} height={100} />
+      </Link>
       <Link href={"/dashboard"}>
-        <Button>Get Started</Button>
+        <Button><span className="font-bold">Get Started</span></Button>
       </Link>
     </div>
   );
