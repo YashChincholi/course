@@ -8,6 +8,8 @@ import { CourseList } from "../../../../../configs/schema";
 import { useUser } from "@clerk/nextjs";
 import CourseBasicIinfo from "../_components/CourseBasicInfo";
 import { HiOutlineClipboardDocumentCheck } from "react-icons/hi2";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 function FinishScreen({ params }) {
   const { user, isLoaded } = useUser();
@@ -66,6 +68,9 @@ function FinishScreen({ params }) {
           }
         />
       </h2>
+      <Link href={"/course/" + course?.courseId + "/start"}>
+        <Button className="w-full mt-5">Start</Button>
+      </Link>
     </div>
   );
 }

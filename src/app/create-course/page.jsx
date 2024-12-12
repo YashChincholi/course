@@ -45,7 +45,6 @@ function CreateCourse() {
   const { userCourseInput } = useContext(UserInputContext);
   const [loading, setLoading] = useState(false);
 
-
   const checkStatus = () => {
     if (!userCourseInput) return true;
     if (
@@ -99,7 +98,6 @@ function CreateCourse() {
     const userProfileImage = user?.imageUrl || "default-image-url";
     const userName = user?.fullName || "Anonymous";
 
-
     // Ensure userCourseInput values are valid and not default
     const noOfChapters =
       userCourseInput.noOfChapter !== undefined
@@ -110,15 +108,13 @@ function CreateCourse() {
     const category = userCourseInput.category || "Default Category";
     const includeVideo = userCourseInput.displayVideo || "Yes";
 
-   
-
     try {
       const result = await db.insert(CourseList).values({
         courseId: id,
         name: topic,
         level: level,
         category: category,
-        noOfChapters: noOfChapters, 
+        noOfChapters: noOfChapters,
         includeVideo: includeVideo,
         courseOutput: courseOutput,
         createdBy: createdBy,

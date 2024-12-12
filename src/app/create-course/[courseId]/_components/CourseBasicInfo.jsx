@@ -7,6 +7,7 @@ import { CldImage } from "next-cloudinary";
 import { CourseList } from "../../../../../configs/schema";
 import { db } from "../../../../../configs/db";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
 function CourseBasicInfo({ course, refreshData, edit = true }) {
   const updatebannerInDatabase = async (courseId, banner) => {
@@ -65,7 +66,11 @@ function CourseBasicInfo({ course, refreshData, edit = true }) {
             <HiOutlinePuzzle />
             {course?.category}
           </h2>
-          <Button className="w-full mt-5">Start</Button>
+          {!edit && (
+            <Link href={"/course/" + course?.courseId + "/start"}>
+              <Button className="w-full mt-5">Start</Button>
+            </Link>
+          )}
         </div>
         <div>
           <label htmlFor="upload-image">

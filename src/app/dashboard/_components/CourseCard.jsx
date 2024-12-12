@@ -7,8 +7,9 @@ import { db } from "../../../../configs/db";
 import { Chapters, CourseList } from "../../../../configs/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-function CourseCard({ course, refreshData }) {
+function CourseCard({ course, refreshData, displayUser = false }) {
   console.log(course);
   const handelDelete = async () => {
     const courseResult = await db
@@ -51,9 +52,11 @@ function CourseCard({ course, refreshData }) {
         <h2 className="font-medium flex items-start justify-between text-lg">
           {course?.courseOutput?.courseName}
           <span className="text-xl">
-            <DropdownOption handelDelete={handelDelete}>
-              <HiEllipsisVertical />
-            </DropdownOption>
+            {!displayUser && (
+              <DropdownOption handelDelete={handelDelete}>
+                <HiEllipsisVertical />
+              </DropdownOption>
+            )}
           </span>
         </h2>
         <p className="text-gray-400 my-2">{course?.category}</p>
@@ -67,6 +70,18 @@ function CourseCard({ course, refreshData }) {
           </h2>
         </div>
       </div>
+
+      {displayUser && (
+        <div className="flex items-center gap-2 mt-2">
+          <Image
+            src={course?.userProfileImage}
+            width={25}
+            height={25}
+            className="rounded-full"
+          />
+          <h2 className="text-sm">{course?.userName}</h2>
+        </div>
+      )}
     </div>
   );
 }

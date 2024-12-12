@@ -54,6 +54,12 @@ function CourseLayout({ params }) {
     setIsLoading(true);
 
     const chapters = course?.courseOutput?.chapters;
+    if (!chapters) {
+      console.error("No chapters found in course output.");
+      setIsLoading(false);
+      return;
+    }
+
     for (const [index, chapter] of chapters.entries()) {
       const name = chapter.name || chapter.Name;
       const about = chapter.about || chapter.About;
@@ -64,7 +70,6 @@ function CourseLayout({ params }) {
         name +
         ", in JSON format with an list of array with following fields as title, explanation on given chapter in detail, Code example(Code Field in <precode> format) if applicable";
 
-      // if (index < 3) {
       try {
         let videoId = "";
         const id = uuidv4();
@@ -82,7 +87,7 @@ function CourseLayout({ params }) {
         // Save Chapter content + video URL
         await db.insert(Chapters).values({
           courseId: course?.courseId,
-          chapterId: index,
+          chapterId: (index + 1).toString(), // Sequential chapterId
           content: content,
           videoId: videoId,
         });
@@ -91,13 +96,18 @@ function CourseLayout({ params }) {
       } catch (error) {
         console.error(`Failed to add chapter ${index + 1}`, error);
       }
-
-      await db.update(CourseList).set({
-        publish: true,
-      });
-      setIsLoading(false);
-      router.replace("/create-course/" + course?.courseId + "/finish");
     }
+
+    // Update course publish status after all chapters are added
+    await db
+      .update(CourseList)
+      .set({
+        publish: true,
+      })
+      .where(eq(CourseList.courseId, course?.courseId));
+
+    setIsLoading(false);
+    router.replace("/create-course/" + course?.courseId + "/finish");
   };
 
   return (

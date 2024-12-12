@@ -28,5 +28,5 @@ export const Chapters = pgTable("Chapters", {
   courseId: varchar("courseId").notNull(),
   chapterId: varchar("chapterId").notNull(),
   content: json("content").notNull(),
-  videoId: varchar("videoId")
+  videoId: varchar("videoId"),
 });
