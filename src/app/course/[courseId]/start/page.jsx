@@ -47,7 +47,7 @@ function CourseStart({ params }) {
   return (
     <div className="overflow-auto">
       {/* Course Chapter list sidebar */}
-      <div className="fixed md:w-64 md:block hidden h-screen border-r shadow-sm">
+      <div className="fixed md:w-64 md:block hidden h-screen border-r shadow-sm overflow-y-auto">
         <h2 className="font-semibold text-base p-5 bg-primary text-white">
           {course?.courseOutput?.courseName}
         </h2>
