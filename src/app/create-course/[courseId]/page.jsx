@@ -50,7 +50,6 @@ function CourseLayout({ params }) {
     setCourse(result[0]);
     setIsLoading(false);
   };
-
   const GenerateChapterContent = async () => {
     setIsLoading(true);
 
@@ -107,15 +106,9 @@ function CourseLayout({ params }) {
       })
       .where(eq(CourseList.courseId, course?.courseId));
 
-    setCourseId(course?.courseId);
+    router.replace("/create-course/" + course?.courseId + "/finish");
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    if (courseId) {
-      router.replace("/create-course/" + courseId + "/finish");
-    }
-  }, [courseId, router]);
 
   return (
     <div className="px-7 md:px-20 lg:px-44">
