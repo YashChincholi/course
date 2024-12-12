@@ -6,6 +6,8 @@ import { Chapters, CourseList } from "../../../../../configs/schema";
 import { and, eq } from "drizzle-orm";
 import ChapterListCard from "./_components/ChapterListCard";
 import ChapterContent from "./_components/ChapterContent";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 function CourseStart({ params }) {
   const unwrappedParams = use(params);
@@ -43,7 +45,7 @@ function CourseStart({ params }) {
   };
 
   return (
-    <div>
+    <div className="overflow-auto">
       {/* Course Chapter list sidebar */}
       <div className="fixed md:w-64 md:block hidden h-screen border-r shadow-sm">
         <h2 className="font-semibold text-base p-5 bg-primary text-white">
@@ -64,6 +66,13 @@ function CourseStart({ params }) {
               <ChapterListCard chapter={chapter} index={index} />
             </div>
           ))}
+        </div>
+        <div className="m-8">
+          <Link href={"/dashboard"}>
+            <Button>
+              <span className="font-bold">Back to Dashboard</span>
+            </Button>
+          </Link>
         </div>
       </div>
       {/* Course content */}
