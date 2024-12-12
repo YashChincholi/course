@@ -36,13 +36,20 @@ function UserCourseList() {
     <div className="my-10">
       <h2 className="font-bold text-2xl mb-4">My Course List</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {courseList?.map((course, index) => (
-          <CourseCard
-            course={course}
-            key={index}
-            refreshData={() => getCourse()}
-          />
-        ))}
+        {courseList?.length > 0
+          ? courseList?.map((course, index) => (
+              <CourseCard
+                course={course}
+                key={index}
+                refreshData={() => getCourse()}
+              />
+            ))
+          : [1, 2, 3, 4, 5].map((item, index) => (
+              <div
+                key={index}
+                className="bg-slate-200 mt-5 w-full h-[270px] animate-pulse rounded-lg"
+              />
+            ))}
       </div>
     </div>
   );
