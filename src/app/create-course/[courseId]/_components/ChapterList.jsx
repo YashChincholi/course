@@ -2,7 +2,7 @@ import React from "react";
 import { HiClock, HiOutlineCheckCircle } from "react-icons/hi";
 import EditChapterList from "./EditChapterList";
 
-function ChapterList({ course, refreshData }) {
+function ChapterList({ course, refreshData, edit = true }) {
   return (
     <div className="mt-11">
       <h2 className="text-xl font-medium">Chapters</h2>
@@ -24,11 +24,13 @@ function ChapterList({ course, refreshData }) {
                   <h2 className="font-semibold text-lg">
                     {name}
                     <span className="text-primary mx-2">
-                      <EditChapterList
-                        course={course}
-                        index={idx}
-                        refreshData={() => refreshData(true)}
-                      />
+                      {edit && (
+                        <EditChapterList
+                          course={course}
+                          index={idx}
+                          refreshData={() => refreshData(true)}
+                        />
+                      )}
                     </span>
                   </h2>
                   <p className="text-gray-500 text-sm">{about}</p>

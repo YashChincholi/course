@@ -6,6 +6,7 @@ import DropdownOption from "./DropdownOption";
 import { db } from "../../../../configs/db";
 import { Chapters, CourseList } from "../../../../configs/schema";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
 function CourseCard({ course, refreshData }) {
   console.log(course);
@@ -27,23 +28,25 @@ function CourseCard({ course, refreshData }) {
 
   return (
     <div className="shadow-sm rounded-xl border p-2 ">
-      {course?.banner ? (
-        <Image
-          src={course?.banner}
-          width={300}
-          height={300}
-          alt="CourseBanner"
-          className="w-full h-[200px] object-cover rounded-lg"
-        />
-      ) : (
-        <Image
-          src={"/placeholder.svg"}
-          width={300}
-          height={300}
-          alt="placeholder"
-          className="w-full h-[200px] object-cover rounded-lg"
-        />
-      )}
+      <Link href={"course/" + course?.courseId}>
+        {course?.banner ? (
+          <Image
+            src={course?.banner}
+            width={300}
+            height={300}
+            alt="CourseBanner"
+            className="w-full h-[200px] object-cover rounded-lg"
+          />
+        ) : (
+          <Image
+            src={"/placeholder.svg"}
+            width={300}
+            height={300}
+            alt="placeholder"
+            className="w-full h-[200px] object-cover rounded-lg"
+          />
+        )}
+      </Link>
       <div className="p-2">
         <h2 className="font-medium flex items-start justify-between text-lg">
           {course?.courseOutput?.courseName}

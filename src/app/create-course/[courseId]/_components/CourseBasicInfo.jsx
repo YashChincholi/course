@@ -8,7 +8,7 @@ import { CourseList } from "../../../../../configs/schema";
 import { db } from "../../../../../configs/db";
 import { eq } from "drizzle-orm";
 
-function CourseBasicInfo({ course, refreshData }) {
+function CourseBasicInfo({ course, refreshData, edit = true }) {
   const updatebannerInDatabase = async (courseId, banner) => {
     try {
       await db
@@ -44,16 +44,18 @@ function CourseBasicInfo({ course, refreshData }) {
   };
 
   return (
-    <div className="border shadow-sm my-10 p-10 rounded-xl">
+    <div className="border shadow-sm my-2 p-10 rounded-xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <h2 className="font-bold text-3xl">
             {course?.courseOutput?.courseName}
             <span className="text-primary ml-2">
-              <EditCourseBasicInfo
-                course={course}
-                refreshData={() => refreshData(true)}
-              />
+              {edit && (
+                <EditCourseBasicInfo
+                  course={course}
+                  refreshData={() => refreshData(true)}
+                />
+              )}
             </span>
           </h2>
           <p className="text-sm text-gray-400 mt-3">
@@ -86,12 +88,14 @@ function CourseBasicInfo({ course, refreshData }) {
               />
             )}
           </label>
-          <input
-            type="file"
-            id="upload-image"
-            className="opacity-0"
-            onChange={onFileSelected}
-          />
+          {edit && (
+            <input
+              type="file"
+              id="upload-image"
+              className="opacity-0"
+              onChange={onFileSelected}
+            />
+          )}
         </div>
       </div>
     </div>
