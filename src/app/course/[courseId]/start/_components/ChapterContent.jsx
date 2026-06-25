@@ -23,7 +23,7 @@ function ChapterContent({ chapter, content }) {
 
       {/* Content */}
       <div>
-        {content?.content?.chapters?.map((item, index) => (
+        {content?.content?.map((item, index) => (
           <div key={index} className="p-5 mb-3 bg-sky-50 rounded-lg shadow-sm">
             <h2 className="font-semibold text-xl mb-1">{item.title}</h2>
             <ReactMarkdown>{item?.explanation}</ReactMarkdown>

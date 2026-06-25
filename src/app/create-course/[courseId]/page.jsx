@@ -84,6 +84,8 @@ function CourseLayout({ params }) {
         const result = await GenerateChapterContent_AI.sendMessage(PROMPT);
         const content = JSON.parse(result?.response?.text());
 
+        console.log(content,"content from couris gnerate chapter")
+
         // Save Chapter content + video URL
         await db.insert(Chapters).values({
           courseId: course?.courseId,
